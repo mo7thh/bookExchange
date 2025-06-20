@@ -35,7 +35,7 @@ class Exchange extends React.Component {
         } 
         */
 
-    fetch(`/api/getIncomingInfo/${this.props.userId}`, {
+    fetch(`http://backend:5000/getIncomingInfo/${this.props.userId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -62,7 +62,7 @@ class Exchange extends React.Component {
             bookOwnerEmail: xxx,
         } 
         */
-    fetch(`/api/getOutgoingInfo/${this.props.userId}`, {
+    fetch(`http://backend:5000/getOutgoingInfo/${this.props.userId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -83,7 +83,7 @@ class Exchange extends React.Component {
       username: book.username,
     };
 
-    fetch("/api/shipped", {
+    fetch("http://backend:5000/shipped", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -7,7 +7,7 @@ const SearchBookRow = (props) => {
   const requestBook = (e) => {
     e.preventDefault();
     console.log('requestBook props:', props);
-    fetch('/api/requestBook', {
+    fetch('http://backend:5000/requestBook', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -14,7 +14,7 @@ class Search extends React.Component {
 
   searchBook = (e) => {
     e.preventDefault();
-    fetch('/api/findOldBook', {
+    fetch('http://backend:5000/findOldBook', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

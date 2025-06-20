@@ -5,7 +5,7 @@ class Register extends React.Component {
 
   register = (e) => {
     e.preventDefault();
-    fetch('/api/register', {
+    fetch('http://backend:5000/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
