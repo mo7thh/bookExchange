@@ -57,7 +57,7 @@ class App extends React.Component {
         <Router>
           {/* NAV will always be rendered */}
           <Nav logOut={this.logOut} loggedIn={this.state.loggedIn} userId={this.state.userId} />
-          <h1>Welcome to Book Exchange App - v2 🚀</h1>
+          <h1>Welcome to Book Exchange App - v2  Test 2🚀</h1>
 
           <Routes>
             {/* <Route path="/login" element={<Login changeState={this.changeState} loggedIn={this.state.loggedIn} userId={this.state.userId} error={this.state.error} />}></Route> */}
