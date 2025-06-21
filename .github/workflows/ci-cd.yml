@@ -45,10 +45,4 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME_FRONTEND }}:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME_FRONTEND }}:${{ env.IMAGE_TAG }}
           no-cache: true
-          
-      - name: Restart frontend deployment
-        run: kubectl rollout restart deployment frontend -n bookexchange
-
-      - name: Restart backend deployment
-        run: kubectl rollout restart deployment backend -n bookexchange
       
