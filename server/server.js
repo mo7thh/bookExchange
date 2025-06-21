@@ -37,13 +37,23 @@ app.use(express.static(path.resolve(__dirname, '../client')));
 app.use('/api', apiRouter);
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/index.html'));
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Server Status</title>
+      </head>
+      <body>
+        <h1>✅ Server is up and running!</h1>
+      </body>
+    </html>
+  `);
 });
 
 // unknown route ****Since we are using react router, 404 error will be handled on the front end side****
 // app.use((req, res) => res.status(404).send('Unknown page, please try again.'));
 app.use("*", (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/index.html'));
+  res.status(404).json({ error: 'API route not found' });
 });
 
 //global error handler
