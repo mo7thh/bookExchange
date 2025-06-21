@@ -7,11 +7,12 @@ on:
     branches: [ main ]
 
 jobs:
-  build-and-push:
+  build-and-deploy:
     runs-on: ubuntu-latest
     env:
       IMAGE_NAME_FRONTEND: bookexchange-frontend
       IMAGE_NAME_BACKEND: bookexchange-backend
+      IMAGE_TAG: ${{ github.sha }}
 
     steps:
       - name: Checkout code
@@ -31,11 +32,30 @@ jobs:
         with:
           context: ./server
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME_BACKEND }}:latest
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME_BACKEND }}:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME_BACKEND }}:${{ env.IMAGE_TAG }}
 
       - name: Build and push frontend image
         uses: docker/build-push-action@v5
         with:
           context: ./client
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME_FRONTEND }}:latest
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME_FRONTEND }}:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME_FRONTEND }}:${{ env.IMAGE_TAG }}
+
+      - name: Update frontend Deployment YAML with new tag
+        run: |
+          sed -i "s|${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME_FRONTEND }}:.*|${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME_FRONTEND }}:${{ env.IMAGE_TAG }}|" ./k8s/frontend-deployment.yaml
+          sed -i "s|${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME_BACKEND }}:.*|${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME_BACKEND }}:${{ env.IMAGE_TAG }}|" ./k8s/backend-deployment.yaml
+
+      - name: Commit updated Kubernetes YAML
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+          git add ./k8s/*.yaml
+          git commit -m "Update image tags to ${{ env.IMAGE_TAG }}"
+          git push
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
