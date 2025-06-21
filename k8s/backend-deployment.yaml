@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: asakusax/bookexchange-backend:${{ github.sha }}
+          image: asakusax/bookexchange-backend:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
