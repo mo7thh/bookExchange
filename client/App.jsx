@@ -59,7 +59,7 @@ class App extends React.Component {
           <Nav logOut={this.logOut} loggedIn={this.state.loggedIn} userId={this.state.userId} />
           <h1>Welcome to Book Exchange App - v2 🚀</h1>
 
-          {/* <Routes>
+          <Routes>
             <Route path="/login" element={<Login changeState={this.changeState} loggedIn={this.state.loggedIn} userId={this.state.userId} error={this.state.error} />}></Route>
             <Route path="/register" element={<Register changeState={this.changeState} loggedIn={this.state.loggedIn} userId={this.state.userId} error={this.state.error} />}></Route>
             <Route path="/mypage" element={<MyPage loggedIn={this.state.loggedIn} userId={this.state.userId} />}></Route>
@@ -67,7 +67,7 @@ class App extends React.Component {
             <Route path="/" element={<Root />}></Route>
             <Route path="/:id" element={<NotFound />}></Route>
             <Route path="/exchange" element={<Exchange loggedIn={this.state.loggedIn} userId={this.state.userId}/>}></Route>
-          </Routes> */}
+          </Routes>
         </Router>
       </div>
     )
