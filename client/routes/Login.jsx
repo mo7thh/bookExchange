@@ -5,7 +5,7 @@ class Login extends React.Component {
 
   login = (e) => {
     e.preventDefault();
-    fetch('/api/verifyUserTest', {
+    fetch('/api/verifyUser', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
