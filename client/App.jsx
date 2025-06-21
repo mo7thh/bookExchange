@@ -60,7 +60,7 @@ class App extends React.Component {
           <h1>Welcome to Book Exchange App - v2 🚀</h1>
 
           <Routes>
-            <Route path="/login" element={<Login changeState={this.changeState} loggedIn={this.state.loggedIn} userId={this.state.userId} error={this.state.error} />}></Route>
+            {/* <Route path="/login" element={<Login changeState={this.changeState} loggedIn={this.state.loggedIn} userId={this.state.userId} error={this.state.error} />}></Route> */}
             <Route path="/register" element={<Register changeState={this.changeState} loggedIn={this.state.loggedIn} userId={this.state.userId} error={this.state.error} />}></Route>
             <Route path="/mypage" element={<MyPage loggedIn={this.state.loggedIn} userId={this.state.userId} />}></Route>
             <Route path="/search" element={<Search loggedIn={this.state.loggedIn} userId={this.state.userId} />}></Route>
