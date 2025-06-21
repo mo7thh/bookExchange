@@ -49,29 +49,4 @@ jobs:
           sed -i "s|asakusax/bookexchange-frontend:latest|asakusax/bookexchange-frontend:${{ github.sha }}|g" k8s/frontend-deployment.yaml
           sed -i "s|asakusax/bookexchange-backend:latest|asakusax/bookexchange-backend:${{ github.sha }}|g" k8s/backend-deployment.yaml
 
-      - name: Push updated manifests
-        env:
-          GH_TOKEN: ${{ secrets.GH_PAT }}
-        run: |
-          git config --global user.name 'mo7thh'
-          git config --global user.email 'ymcapone184@gmail.com'
-          
-          # Set and check remote URL
-          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}
-          echo "Git remote URL:"
-          git remote -v
-
-          # Check current git status before pushing
-          git status
-
-          # Check if files are staged
-          git diff --cached
-
-          # Try committing if there are changes
-          git add ./k8s/*.yaml
-          git diff --cached --quiet || git commit -m "Update image tags to ${{ github.sha }}"
-          
-          # Try pushing
-          git push
-
       
