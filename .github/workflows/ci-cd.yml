@@ -35,7 +35,7 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME_BACKEND }}:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME_BACKEND }}:${{ env.IMAGE_TAG }}
-
+          no-cache: true
       - name: Build and push frontend image
         uses: docker/build-push-action@v5
         with:
@@ -44,6 +44,7 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME_FRONTEND }}:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME_FRONTEND }}:${{ env.IMAGE_TAG }}
+          no-cache: true
       - name: Update image tags in Kubernetes manifests
         run: |
           sed -i "s|asakusax/bookexchange-frontend:latest|asakusax/bookexchange-frontend:${{ github.sha }}|g" k8s/frontend-deployment.yaml

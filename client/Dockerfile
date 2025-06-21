@@ -1,20 +1,13 @@
-FROM node:18-alpine
-
-# Set working directory
+# Step 1: Build the React app
+FROM node:18-alpine AS builder
 WORKDIR /app
-
-# Copy package files and install deps
 COPY package*.json ./
 RUN npm install
-
-# Copy the rest of the app
 COPY . .
+RUN npm run build
 
-# Build assets if you have a build script
-# RUN npm run build
-
-# Expose the port your server uses (assuming 3000)
-EXPOSE 3000
-
-# Start your app (adjust based on your entry point)
-CMD ["npm", "start"]
+# Step 2: Serve it with Nginx
+FROM nginx:alpine
+COPY --from=builder /app/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
