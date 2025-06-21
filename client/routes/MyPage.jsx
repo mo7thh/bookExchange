@@ -14,7 +14,7 @@ class MyPage extends React.Component {
   }
 
   getMyOldBooks = () => {
-    fetch(`http://backend:5000/getMyOldBookList/${this.props.userId}`, {
+    fetch(`/getMyOldBookList/${this.props.userId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ class MyPage extends React.Component {
 
   addOldBook = (e) => {
     e.preventDefault();
-    fetch('http://backend:5000/addOldBook', {
+    fetch('/addOldBook', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

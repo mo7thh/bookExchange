@@ -1,21 +1,20 @@
-# client/Dockerfile
+FROM node:18-alpine
 
-# 1. Build stage
-FROM node:18-alpine AS builder
-
+# Set working directory
 WORKDIR /app
+
+# Copy package files and install deps
 COPY package*.json ./
 RUN npm install
 
+# Copy the rest of the app
 COPY . .
-RUN npm run build
 
-# 2. Production stage using Nginx
-FROM nginx:stable-alpine
+# Build assets if you have a build script
+# RUN npm run build
 
-COPY --from=builder /app/build /usr/share/nginx/html
+# Expose the port your server uses (assuming 3000)
+EXPOSE 3000
 
-# Nginx will serve on port 80
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+# Start your app (adjust based on your entry point)
+CMD ["npm", "start"]

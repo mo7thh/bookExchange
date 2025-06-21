@@ -2,7 +2,7 @@ const React = require('react');
 
 class MyBookRow extends React.Component {
   deleteMyOldBook = () => {
-    fetch('http://backend:5000/deleteOldBook', {
+    fetch('/deleteOldBook', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
