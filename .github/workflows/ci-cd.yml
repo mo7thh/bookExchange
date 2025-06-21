@@ -58,5 +58,5 @@ jobs:
           git add ./k8s/*.yaml
           git commit -m "Update image tags to ${{ github.sha }}"
           git push
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+      
