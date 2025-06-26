@@ -46,7 +46,7 @@ const App = () => {
       </div>
       <Router>
         <Nav logOut={logOut} loggedIn={loggedIn} userId={userId} />
-
+        {/* Routes */}
         <Routes>
           <Route
             path="/login"
