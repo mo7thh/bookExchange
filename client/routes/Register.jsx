@@ -21,7 +21,7 @@ const Register = ({ loggedIn, error, changeState }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    fetch('/register', {
+    fetch('/api/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
