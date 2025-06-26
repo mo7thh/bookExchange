@@ -35,6 +35,7 @@ dbController.addBook = async (req, res, next) => {
 
 // Search books owned by users by keyword
 dbController.findOldBook = async (req, res, next) => {
+  console.log('findOldBook body:', req.body);
   const keyword = req.body.searchString;
   try {
     // console.log('Keyword:', keyword);
@@ -43,7 +44,7 @@ dbController.findOldBook = async (req, res, next) => {
     const bookISBNs = matchingBooks.map(book => book.isbn);
     // console.log('Book ISBNs:', bookISBNs);
     const userBooks = await UserBook.find({ bookISBN: { $in: bookISBNs } }).populate('userId');
-    // console.log('User books:', userBooks);
+    console.log('User books:', userBooks);
 
     const result = userBooks.map(ub => {
       const book = matchingBooks.find(b => b.isbn === ub.bookISBN);
@@ -68,6 +69,7 @@ dbController.findOldBook = async (req, res, next) => {
 dbController.addOldBook = async (req, res, next) => {
   const { isbn, condition, userId } = req.body;
   try {
+    console.log('addOldBook body:', req.body);
     await UserBook.create({ userId, bookISBN: isbn, condition });
     next();
   } catch (err) {

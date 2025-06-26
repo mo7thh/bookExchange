@@ -1,105 +1,106 @@
-const React = require('react');
+import React, { useEffect, useState, useCallback } from 'react';
 import MyBookRow from '../components/MyBookRow';
 
-class MyPage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      myoldbooks: [],
-    }
-    this.getMyOldBooks();
-    this.rerender = this.rerender.bind(this);
-    this.getMyOldBooks = this.getMyOldBooks.bind(this);
-    this.addOldBook = this.addOldBook.bind(this);
-  }
+const MyPage = ({ userId }) => {
+  const [myOldBooks, setMyOldBooks] = useState([]);
+  const [isbn, setIsbn] = useState('');
+  const [condition, setCondition] = useState('Like New');
 
-  getMyOldBooks = () => {
-    fetch(`/getMyOldBookList/${this.props.userId}`, {
+  const getMyOldBooks = useCallback(() => {
+    fetch(`/api/getMyOldBookList/${userId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        Accept: 'application/json'
       }
     })
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ myoldbooks: data });
-      });
-  }
+      .then(res => res.json())
+      .then(data => setMyOldBooks(data))
+      .catch(err => console.error('Fetch error:', err));
+  }, [userId]);
 
-  addOldBook = (e) => {
+  useEffect(() => {
+    if (userId) getMyOldBooks();
+  }, [getMyOldBooks, userId]);
+
+  const addOldBook = async (e) => {
     e.preventDefault();
-    fetch('/addOldBook', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({ 
-        isbn: document.getElementById('isbn').value, 
-        condition: document.getElementById('condition').value, 
-        userId: this.props.userId 
-      })
-    })
-      .then(response => response.json())
-      .then((data) => {
-       this.getMyOldBooks();
+    try {
+      const response = await fetch('/api/addOldBook', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        },
+        body: JSON.stringify({
+          isbn,
+          condition,
+          userId
+        })
       });
-  }
 
-  rerender = () => {
-    this.getMyOldBooks();
-  }
-
-  render() {
-    let table;
-    const rows = [];
-    if (this.state.myoldbooks.length > 0) {
-      rows.push(
-        <tr>
-          <th key={0}>Title</th>
-          <th key={1}>Author</th>
-          <th key={2}>ISBN</th>
-          <th key={3}>Condition</th>
-          <th key={4}></th>
-        </tr>)
-      for (let i = 0; i < this.state.myoldbooks.length; i++) {
-        rows.push(<MyBookRow
-          {...this.state.myoldbooks[i]}
-          key={i}
-          rerender={this.rerender}
-        />)
-      }
-      table = <table className="result-table">{rows}</table>
+      const data = await response.json();
+      console.log('Added book:', data);
+      getMyOldBooks();
+      setIsbn('');
+      setCondition('Like New');
+    } catch (err) {
+      console.error('Add book error:', err);
     }
-    return (
-      <div className="search-box">
-        <form className="search-form" onClick={this.addOldBook}>
-          <input type="text" placeholder="Add book by isbn" name="isbn" id="isbn" required />
-          <select id="condition" name="condition">
-            <option value="Like New">Like New</option>
-            <option value="Fine">Fine</option>
-            <option value="Very Good">Very Good</option>
-            <option value="Good">Good</option>
-            <option value="Fair">Fair</option>
-            <option value="Poor">Poor</option>
-          </select>
-          <input type="submit" value="Add"  />
-        </form>
-        <div class="result-box">
-          {table}
-        </div>
+  };
+
+  const rerender = () => getMyOldBooks();
+
+  return (
+    <div className="search-box">
+      <form className="search-form" onSubmit={addOldBook}>
+        <input
+          type="text"
+          placeholder="Add book by ISBN"
+          name="isbn"
+          id="isbn"
+          required
+          value={isbn}
+          onChange={(e) => setIsbn(e.target.value)}
+        />
+        <select
+          id="condition"
+          name="condition"
+          value={condition}
+          onChange={(e) => setCondition(e.target.value)}
+        >
+          <option value="Like New">Like New</option>
+          <option value="Fine">Fine</option>
+          <option value="Very Good">Very Good</option>
+          <option value="Good">Good</option>
+          <option value="Fair">Fair</option>
+          <option value="Poor">Poor</option>
+        </select>
+        <input type="submit" value="Add" />
+      </form>
+
+      <div className="result-box">
+        {myOldBooks.length > 0 && (
+          <table className="result-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>ISBN</th>
+                <th>Condition</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {myOldBooks.map((book, index) => (
+                <MyBookRow key={index} {...book} rerender={rerender} />
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
-    )
-  }
-}
+    </div>
+  );
+};
 
 export default MyPage;
-
-
-
-
-
-
-
-

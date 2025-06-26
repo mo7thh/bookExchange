@@ -1,75 +1,79 @@
-const React = require('react');
+import React, { useState, useCallback } from 'react';
 import SearchBookRow from '../components/SearchBookRow';
 
-class Search extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      availiableBooks: [],
-    }
-    this.searchBook = this.searchBook.bind(this);
-    console.log('Search props:', props);
+const Search = ({ userId }) => {
+  const [availableBooks, setAvailableBooks] = useState([]);
+  const [searchString, setSearchString] = useState('');
 
-  }
-
-  searchBook = (e) => {
+  const searchBook = useCallback((e) => {
     e.preventDefault();
-    fetch('/findOldBook', {
+
+    fetch('/api/findOldBook', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        Accept: 'application/json',
       },
-      body: JSON.stringify({ searchString: document.getElementById('searchString').value })
+      body: JSON.stringify({ searchString }),
     })
-      .then(response => response.json())
-      .then(data => this.setState({ availiableBooks: data }));
+      .then((res) => res.json())
+      .then((data) => setAvailableBooks(data))
+      .catch((err) => console.error('Search error:', err));
+  }, [searchString]);
+
+  const rows = [];
+
+  if (availableBooks.length > 0) {
+    rows.push(
+      <tr key="headers">
+        <th>Title</th>
+        <th>Author</th>
+        <th>ISBN</th>
+        <th>Condition</th>
+        <th>Owner</th>
+        <th></th>
+      </tr>
+    );
+
+    availableBooks.forEach((book, i) => {
+      if (book.username !== 'max') {
+        rows.push(
+          <SearchBookRow
+            key={i}
+            {...book}
+            userId={userId}
+          />
+        );
+      }
+    });
   }
 
-  render() {
-    let table;
-    const rows = [];
-    if (this.state.availiableBooks.length > 0) {
-      rows.push(
-        <tr>
-          <th key={0}>Title</th>
-          <th key={1}>Author</th>
-          <th key={2}>ISBN</th>
-          <th key={3}>Condition</th>
-          <th key={4}>Owner</th>
-          <th key={5}></th>
-        </tr>)
-      for (let i = 0; i < this.state.availiableBooks.length; i++) {
-        if (this.state.availiableBooks[i].username !== 'max') {
-          rows.push(<SearchBookRow
-            {...this.state.availiableBooks[i]}
-            key={i}
-            userId = {this.props.userId}
-          />)
-        }
-      }
-      table = <table className="result-table">{rows}</table>
-    }
-    return (
-      <div className="search-box">
-        <form className="search-form">
-          <input type="text" placeholder="search book by title" name="title" id="searchString" required />
-          <input type="submit" value="search" onClick={this.searchBook} />
-        </form>
-        <div className="result-box">
-          {table}
-        </div>
+  return (
+    <div className="search-box">
+      <form className="search-form" onSubmit={searchBook}>
+        <input
+          type="text"
+          placeholder="Search book by title"
+          name="title"
+          id="searchString"
+          required
+          value={searchString}
+          onChange={(e) => setSearchString(e.target.value)}
+        />
+        <input type="submit" value="Search" />
+      </form>
+
+      <div className="result-box">
+        {rows.length > 0 ? (
+          <table className="result-table">
+            <tbody>{rows}</tbody>
+          </table>
+        ) : (
+          <p>No results found.</p>
+        )}
       </div>
-    )
-  }
-}
+    </div>
+  );
+};
 
 export default Search;
-
-
-
-
-
-
-
-

@@ -1,6 +1,6 @@
-const React = require('react');
+import React, { useState, useCallback } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-//will house all the react components
+
 import Nav from './components/Nav.jsx';
 import Root from './routes/Root.jsx';
 import Login from './routes/Login.jsx';
@@ -10,68 +10,75 @@ import Search from './routes/Search.jsx';
 import NotFound from './routes/NotFound.jsx';
 import Exchange from './routes/Exchange.jsx';
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loggedIn: false,
-      userId: null,
-      error: null
-    };
-    this.changeState = this.changeState.bind(this);
-    this.logOut = this.logOut.bind(this);
-  }
-  // METHOD TO UPDATE STATE USERID FOR LOGGED IN USER
-  // componentDidMount() {
-  //   fetch('/')
-  // }
+const App = () => {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [userId, setUserId] = useState(null);
+  const [error, setError] = useState(null);
 
-  changeState (data) {
+  const changeState = useCallback((data) => {
     if (data.err) {
-      console.log('error foundddd')
-      this.setState({loggedIn: false, error: "Please Try Again"});
+      console.log('error foundddd');
+      setLoggedIn(false);
+      setError('Please Try Again');
     } else if (data.loggedIn) {
-      console.log('data.user.user_id', data.user)
-      const newState = {
-            ...this.state,
-            loggedIn: true, 
-            userId: data.user._id
-      }
-      this.setState(newState);
+      console.log('data.user.user_id', data.user);
+      setLoggedIn(true);
+      setUserId(data.user._id);
+      setError(null);
     } else {
-      this.setState({loggedIn: false, error: "Please Try Again"});
+      setLoggedIn(false);
+      setUserId(null);
+      setError('Please Try Again');
     }
-  }
+  }, []);
 
-  logOut () {
-    this.setState({loggedIn: false, userId: null, error: null});
-  }
-  
-  render() {
-    return (
-      <div>
-        <div className="header-container">
-          <h1><a href="">The Book Exchange</a></h1>
-          <hr className="bottom-hr" />
-        </div>
-        <Router>
-          {/* NAV will always be rendered */}
-          <Nav logOut={this.logOut} loggedIn={this.state.loggedIn} userId={this.state.userId} />
-          <h1>Welcome to Book Exchange App Test New yaml - v2  Test 4🚀</h1>
+  const logOut = useCallback(() => {
+    setLoggedIn(false);
+    setUserId(null);
+    setError(null);
+  }, []);
 
-          <Routes>
-            <Route path="/login" element={<Login changeState={this.changeState} loggedIn={this.state.loggedIn} userId={this.state.userId} error={this.state.error} />}></Route>
-            <Route path="/register" element={<Register changeState={this.changeState} loggedIn={this.state.loggedIn} userId={this.state.userId} error={this.state.error} />}></Route>
-            <Route path="/mypage" element={<MyPage loggedIn={this.state.loggedIn} userId={this.state.userId} />}></Route>
-            <Route path="/search" element={<Search loggedIn={this.state.loggedIn} userId={this.state.userId} />}></Route>
-            <Route path="/" element={<Root />}></Route>
-            <Route path="/:id" element={<NotFound />}></Route>
-            <Route path="/exchange" element={<Exchange loggedIn={this.state.loggedIn} userId={this.state.userId}/>}></Route>
-          </Routes>
-        </Router>
+  return (
+    <div>
+      <div className="header-container">
+        <h1><a href="/">The Book Exchange</a></h1>
+        <hr className="bottom-hr" />
       </div>
-    )
-  }
-}
+      <Router>
+        <Nav logOut={logOut} loggedIn={loggedIn} userId={userId} />
+
+        <Routes>
+          <Route
+            path="/login"
+            element={
+              <Login
+                changeState={changeState}
+                loggedIn={loggedIn}
+                userId={userId}
+                error={error}
+              />
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <Register
+                changeState={changeState}
+                loggedIn={loggedIn}
+                userId={userId}
+                error={error}
+              />
+            }
+          />
+          <Route path="/mypage" element={<MyPage loggedIn={loggedIn} userId={userId} />} />
+          <Route path="/search" element={<Search loggedIn={loggedIn} userId={userId} />} />
+          <Route path="/" element={<Root />} />
+          <Route path="/:id" element={<NotFound />} />
+          <Route path="/exchange" element={<Exchange loggedIn={loggedIn} userId={userId} />} />
+        </Routes>
+      </Router>
+    </div>
+  );
+};
 
 export default App;

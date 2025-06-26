@@ -1,8 +1,8 @@
-const React = require('react');
-class Root extends React.Component {
-  render() {
-    return (
-      <div className="landing-container">
+import React from 'react';
+
+const Root = () => {
+  return (
+    <div className="landing-container">
         <div className="drawing">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2829.3333 2829.3333">
             <g id="g10" transform="matrix(1.3333333,0,0,-1.3333333,0,2829.3333), scale(0.1)">
@@ -19,16 +19,7 @@ class Root extends React.Component {
           </svg>
         </div>
       </div>
-    )
-  }
-}
+  );
+};
 
 export default Root;
-
-
-
-
-
-
-
-

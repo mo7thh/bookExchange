@@ -25,7 +25,14 @@ module.exports = {
       },
       {
         test: /\.(css|scss)$/,
-        use: ['style-loader', 'css-loader', 'sass-loader', 'postcss-loader'],
+        use: ['style-loader', 'css-loader', 'sass-loader', 'postcss-loader',{
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                parser: 'postcss-scss'
+              }
+            }
+          },],
       },
       {
         test: /\.(png|jpe?g|svg|gif)$/,
@@ -50,7 +57,8 @@ module.exports = {
     port: 3000,
     proxy: {
      '/api': {
-      target: 'http://backend-service:5000',
+      // target: 'http://backend-service:5000',
+      target:"http://localhost:5000",
       changeOrigin: true,
     }
     },

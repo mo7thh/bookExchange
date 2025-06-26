@@ -1,41 +1,38 @@
-const React = require('react');
+import React from 'react';
 
-class MyBookRow extends React.Component {
-  deleteMyOldBook = () => {
-    fetch('/deleteOldBook', {
+const MyBookRow = ({ title, author, isbn, condition, users_books_id, rerender }) => {
+  const deleteMyOldBook = () => {
+    fetch('/api/deleteOldBook', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
-      body: JSON.stringify({ myOldBookId: this.props.users_books_id })
+      body: JSON.stringify({ myOldBookId: users_books_id })
     })
       .then(response => response.json())
-      .then((data) => {
-        return this.props.rerender();
+      .then(() => {
+        rerender();
       });
-  }
-  render() {
-  console.log('MyBookRow props:', this.props);
+  };
 
-    return (
-      <tr>
-        <td>{this.props.title}</td>
-        <td>{this.props.author}</td>
-        <td>{this.props.isbn}</td>
-        <td>{this.props.condition}</td>
-        <td><center><button type="button" class="req-button" onClick={this.deleteMyOldBook}>delete</button></center></td>
-      </tr>
-    )
-  }
-}
+  console.log('MyBookRow props:', { title, author, isbn, condition, users_books_id });
+
+  return (
+    <tr>
+      <td>{title}</td>
+      <td>{author}</td>
+      <td>{isbn}</td>
+      <td>{condition}</td>
+      <td>
+        <center>
+          <button type="button" className="req-button" onClick={deleteMyOldBook}>
+            delete
+          </button>
+        </center>
+      </td>
+    </tr>
+  );
+};
 
 export default MyBookRow;
-
-
-
-
-
-
-
-

@@ -28,14 +28,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(express.static(path.resolve(__dirname, '../public')));
 app.use(express.static(path.resolve(__dirname, '../client')));
-// Awww thank you <3 <3 
-// You're welcome :)
 
-/**
- * define route handlers
- */
+
+//API routes
 app.use('/api', apiRouter);
 
+//Server Status
 app.get('/', (req, res) => {
   res.send(`
     <!DOCTYPE html>
@@ -50,8 +48,7 @@ app.get('/', (req, res) => {
   `);
 });
 
-// unknown route ****Since we are using react router, 404 error will be handled on the front end side****
-// app.use((req, res) => res.status(404).send('Unknown page, please try again.'));
+//unrecognized routes
 app.use("*", (req, res) => {
   res.status(404).json({ error: 'API route not found' });
 });
@@ -68,6 +65,7 @@ app.use((err, req, res, next) => {
   return res.status(errorObj.status).json(errorObj.message);
 });
 
+//start server
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
