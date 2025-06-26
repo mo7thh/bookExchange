@@ -11,7 +11,7 @@ const apiRouter = require('./routes/api');
 app.use(express.json());
 
 
-mongoose.connect('mongodb+srv://ak25117:AE1sg8yVMdwQYooA@cluster0.28v8jbi.mongodb.net/', {
+mongoose.connect('mongodb+srv://ymcapone184:12zYd3KXImPX1yxe@cluster0.ardprzh.mongodb.net/', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
